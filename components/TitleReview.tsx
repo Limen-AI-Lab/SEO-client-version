@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check, Edit2, Info, Sparkles, XCircle, Users, Target, Hash } from 'lucide-react';
 import { TitleOption } from '../types';
 import { suggestAlternativeTitles } from '../services/geminiService';
@@ -22,6 +23,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
   onSubmit,
   readOnly = false
 }) => {
+  const { t } = useTranslation(['title', 'common']);
   const [titles, setTitles] = useState<TitleOption[]>(data);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isRejecting, setIsRejecting] = useState(false);
@@ -61,11 +63,11 @@ const TitleReview: React.FC<TitleReviewProps> = ({
 
     if (alternatives.length > 0) {
       const newText = alternatives[0]; 
-      if (confirm(`AI Suggestion: "${newText}"\n\nReplace current title with this suggestion?`)) {
+      if (confirm(t('aiSuggestion.confirm', { title: newText }))) {
         updateTitleText(id, newText);
       }
     } else {
-      alert("Could not generate suggestions at this time.");
+      alert(t('aiSuggestion.error'));
     }
   };
 
@@ -78,13 +80,13 @@ const TitleReview: React.FC<TitleReviewProps> = ({
           <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
             <XCircle className="w-6 h-6 text-red-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-slate-900">Reject All Titles</h2>
-          <p className="text-slate-600 mt-2">Please let us know why these titles don't work so we can provide better options.</p>
+          <h2 className="text-2xl font-semibold text-slate-900">{t('reject.title')}</h2>
+          <p className="text-slate-600 mt-2">{t('reject.description')}</p>
         </div>
         
         <textarea
           className="w-full h-32 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-none"
-          placeholder="e.g., These feel too casual for our corporate clients..."
+          placeholder={t('reject.placeholder')}
           value={rejectReason}
           onChange={(e) => setRejectReason(e.target.value)}
         />
@@ -94,14 +96,14 @@ const TitleReview: React.FC<TitleReviewProps> = ({
             onClick={() => setIsRejecting(false)}
             className="px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
           >
-            Cancel
+            {t('common:cancel')}
           </button>
           <button 
             onClick={() => onSubmit(titles, true, rejectReason, generalComments)}
             disabled={!rejectReason.trim()}
             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
           >
-            Submit Rejection
+            {t('reject.submit')}
           </button>
         </div>
       </div>
@@ -114,14 +116,13 @@ const TitleReview: React.FC<TitleReviewProps> = ({
       {/* Header Section */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
-           <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">Step 1 of 3</span>
+           <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">{t('step')}</span>
            <span className="text-slate-400 text-sm">/</span>
            <span className="text-slate-500 text-sm">{projectName}</span>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900">Title & Keyword Review</h1>
+        <h1 className="text-3xl font-bold text-slate-900">{t('pageTitle')}</h1>
         <p className="text-slate-600 mt-2 max-w-2xl">
-          Select your preferred title(s). You can edit them directly or add notes. 
-          Your input helps us refine the content strategy.
+          {t('description')}
         </p>
       </div>
 
@@ -165,7 +166,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
                           onKeyDown={(e) => e.key === 'Enter' && setEditingId(null)}
                           className="w-full text-xl font-semibold text-slate-900 border-b-2 border-indigo-500 focus:outline-none bg-transparent"
                         />
-                        <span className="text-xs text-slate-500 mt-1 block">Press Enter to save</span>
+                        <span className="text-xs text-slate-500 mt-1 block">{t('pressEnterToSave')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-3 mb-2">
@@ -187,7 +188,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
                           disabled={isGenerating}
                         >
                           <Sparkles className="w-3 h-3" />
-                          {isGenerating ? 'Thinking...' : 'AI Rephrase'}
+                          {isGenerating ? t('thinking') : t('aiRephrase')}
                         </button>
                       </div>
                     )}
@@ -195,7 +196,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
                     <div className="mt-4">
                       <input
                         type="text"
-                        placeholder="Add specific feedback or notes about this title..."
+                        placeholder={t('addNotes')}
                         value={title.clientNotes || ''}
                         onChange={(e) => updateNotes(title.id, e.target.value)}
                         className="w-full text-sm border-b border-transparent hover:border-slate-200 focus:border-indigo-400 outline-none bg-transparent transition-colors py-1 text-slate-600 placeholder:text-slate-400"
@@ -209,10 +210,10 @@ const TitleReview: React.FC<TitleReviewProps> = ({
 
           {/* General Comments Section */}
           <div className="bg-white rounded-xl border border-slate-200 p-6 mt-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-3 uppercase tracking-wide">General Comments (Optional)</h3>
+            <h3 className="text-sm font-semibold text-slate-900 mb-3 uppercase tracking-wide">{t('common:generalComments')}</h3>
             <textarea
               className="w-full min-h-[100px] p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y bg-slate-50"
-              placeholder="Any other thoughts on the direction, tone, or style?"
+              placeholder={t('common:generalCommentsPlaceholder')}
               value={generalComments}
               onChange={(e) => setGeneralComments(e.target.value)}
             />
@@ -225,7 +226,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
             <div className="p-4 bg-slate-50 border-b border-slate-200">
               <h2 className="font-semibold text-slate-900 flex items-center gap-2">
                 <Info className="w-4 h-4 text-slate-500" />
-                Project Context
+                {t('projectContext')}
               </h2>
             </div>
             
@@ -233,7 +234,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
               {/* Target Audience */}
               <div>
                 <div className="flex items-center gap-2 mb-2 text-indigo-600 font-medium text-sm">
-                  <Users className="w-4 h-4" /> Target Audience
+                  <Users className="w-4 h-4" /> {t('targetAudience')}
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
                   {targetAudience}
@@ -243,7 +244,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
               {/* Strategy */}
               <div>
                 <div className="flex items-center gap-2 mb-2 text-indigo-600 font-medium text-sm">
-                  <Target className="w-4 h-4" /> Strategy Goal
+                  <Target className="w-4 h-4" /> {t('strategyGoal')}
                 </div>
                 <p className="text-sm text-slate-700 leading-relaxed bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
                   {strategyGoal}
@@ -253,7 +254,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
               {/* Keywords */}
               <div>
                 <div className="flex items-center gap-2 mb-3 text-indigo-600 font-medium text-sm">
-                  <Hash className="w-4 h-4" /> Target Keywords
+                  <Hash className="w-4 h-4" /> {t('targetKeywords')}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {keywords.map((kw, idx) => (
@@ -276,19 +277,19 @@ const TitleReview: React.FC<TitleReviewProps> = ({
             onClick={() => setIsRejecting(true)}
             className="px-6 py-2.5 text-red-600 font-medium hover:bg-red-50 rounded-lg transition-colors"
           >
-            Reject All
+            {t('rejectAll')}
           </button>
 
           <div className="flex items-center gap-4">
             <span className="text-slate-600 hidden sm:inline-block">
-              {selectedCount} selected
+              {t('selected', { count: selectedCount })}
             </span>
             <button
               onClick={() => onSubmit(titles, false, undefined, generalComments)}
               disabled={selectedCount === 0}
               className="px-8 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-200"
             >
-              Approve Selection ({selectedCount})
+              {t('approveSelection', { count: selectedCount })}
             </button>
           </div>
         </div>
@@ -298,7 +299,7 @@ const TitleReview: React.FC<TitleReviewProps> = ({
       {readOnly && (
         <div className="sticky bottom-6 mt-8 bg-slate-100 p-4 rounded-xl border border-slate-200 text-center">
           <p className="text-slate-600">
-            <span className="font-medium">Read-only mode</span> — This review has been completed.
+            <span className="font-medium">{t('common:readOnlyMode')}</span> — {t('common:reviewCompleted')}
           </p>
         </div>
       )}

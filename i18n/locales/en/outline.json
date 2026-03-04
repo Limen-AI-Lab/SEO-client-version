@@ -1,0 +1,19 @@
+{
+  "pageTitle": "Outline Review",
+  "description": "Review the structure for <bold>\"{{projectName}}\"</bold> before production begins.",
+  "editModeNotice": "Edit Mode: Click on any section to edit, delete, or add comments",
+  "addSectionBeginning": "Add section at beginning",
+  "addSection": "Add section",
+  "newSectionTitle": "New section title",
+  "sectionTitle": "Section title",
+  "descriptionOptional": "Description (optional)",
+  "addSectionButton": "Add Section",
+  "commentsAndActions": "Comments & Actions",
+  "selectedSection": "Selected Section",
+  "newSection": "New Section",
+  "commentPlaceholder": "Ask a question or request a change...",
+  "reviewAllSections": "Please review all sections before approving.",
+  "approveOutline": "Approve Outline",
+  "editSection": "Edit section",
+  "deleteSection": "Delete section"
+}

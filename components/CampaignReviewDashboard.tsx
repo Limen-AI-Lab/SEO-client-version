@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   getCampaignInfo, 
   getCampaignPendingArticles, 
@@ -28,6 +29,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
   campaignId, 
   onSelectArticle 
 }) => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const [campaignInfo, setCampaignInfo] = useState<CampaignInfo | null>(null);
   const [pendingArticles, setPendingArticles] = useState<ClientTask[]>([]);
   const [completedArticles, setCompletedArticles] = useState<ClientTask[]>([]);
@@ -52,7 +54,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
       ]);
 
       if (!info) {
-        setError('Campaign not found. The link may be invalid or expired.');
+        setError(t('invalidLink'));
         setIsLoading(false);
         return;
       }
@@ -62,7 +64,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
       setCompletedArticles(completed);
     } catch (err) {
       console.error('Error loading campaign data:', err);
-      setError('Failed to load campaign data. Please try again.');
+      setError(t('failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -87,11 +89,11 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
   const getTaskTypeLabel = (type: TaskType) => {
     switch (type) {
       case TaskType.TITLE_REVIEW:
-        return 'Title Review';
+        return t('titleReview');
       case TaskType.OUTLINE_REVIEW:
-        return 'Outline Review';
+        return t('outlineReview');
       case TaskType.CONTENT_REVIEW:
-        return 'Content Review';
+        return t('contentReview');
     }
   };
 
@@ -110,7 +112,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading campaign...</p>
+          <p className="text-slate-600">{t('loadingCampaign')}</p>
         </div>
       </div>
     );
@@ -124,13 +126,13 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Campaign Not Found</h2>
-          <p className="text-slate-500 mb-6">{error || 'The campaign you are looking for does not exist.'}</p>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">{t('campaignNotFound')}</h2>
+          <p className="text-slate-500 mb-6">{error || t('campaignNotFoundDesc')}</p>
           <button
             onClick={loadData}
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
           >
-            Try Again
+            {t('common:tryAgain')}
           </button>
         </div>
       </div>
@@ -182,7 +184,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
                     ? 'bg-green-100 text-green-700' 
                     : 'bg-amber-100 text-amber-700'
               }`}>
-                {inRevision ? 'Revision Requested' : getTaskTypeLabel(article.type)}
+                {inRevision ? t('revisionRequested') : getTaskTypeLabel(article.type)}
               </span>
               <span>•</span>
               <Clock size={12} />
@@ -194,21 +196,21 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
         {!isCompleted ? (
           <div className="flex items-center gap-2">
             <span className="px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg group-hover:bg-indigo-700 transition">
-              Review
+              {t('common:review')}
             </span>
             <ChevronRight size={18} className="text-slate-300 group-hover:text-indigo-600 transition" />
           </div>
         ) : inRevision ? (
           <div className="flex items-center gap-2">
             <span className="px-3 py-1.5 bg-amber-500 text-white text-sm font-medium rounded-lg group-hover:bg-amber-600 transition">
-              In Revision
+              {t('inRevision')}
             </span>
             <ChevronRight size={18} className="text-amber-300 group-hover:text-amber-600 transition" />
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <span className="px-3 py-1.5 bg-slate-200 text-slate-600 text-sm font-medium rounded-lg group-hover:bg-slate-300 transition">
-              View
+              {t('common:view')}
             </span>
             <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 transition" />
           </div>
@@ -266,10 +268,10 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
             </div>
             <div className="flex items-center gap-2 text-sm">
               <span className="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full font-medium">
-                {pendingArticles.length} Pending
+                {pendingArticles.length} {t('common:pending')}
               </span>
               <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full font-medium">
-                {completedArticles.length} Completed
+                {completedArticles.length} {t('common:completed')}
               </span>
             </div>
           </div>
@@ -286,26 +288,26 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
                 <Clock size={16} className="text-amber-600" />
               </div>
               <h2 className="text-lg font-bold text-slate-900">
-                Pending Reviews ({pendingArticles.length})
+                {t('pendingReviews')} ({pendingArticles.length})
               </h2>
             </div>
 
             {renderArticleSection(
-              'Title Review',
+              t('titleReview'),
               titleReviews,
               <FileText size={16} />,
               'text-blue-600'
             )}
 
             {renderArticleSection(
-              'Outline Review',
+              t('outlineReview'),
               outlineReviews,
               <FileEdit size={16} />,
               'text-purple-600'
             )}
 
             {renderArticleSection(
-              'Content Review',
+              t('contentReview'),
               contentReviews,
               <FileCheck size={16} />,
               'text-green-600'
@@ -316,8 +318,8 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={32} className="text-green-500" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">All Caught Up!</h3>
-            <p className="text-slate-500">No pending reviews at this time.</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{t('allCaughtUp')}</h3>
+            <p className="text-slate-500">{t('noPendingReviews')}</p>
           </div>
         )}
 
@@ -333,7 +335,7 @@ const CampaignReviewDashboard: React.FC<CampaignReviewDashboardProps> = ({
                   <CheckCircle size={16} className="text-green-600" />
                 </div>
                 <h2 className="text-lg font-bold text-slate-900">
-                  Completed ({completedArticles.length})
+                  {t('completed')} ({completedArticles.length})
                 </h2>
               </div>
               <ChevronRight 

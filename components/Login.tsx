@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Lock, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Loader2, CheckCircle, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { login } from '../services/authService';
 
 interface LoginProps {
@@ -8,17 +9,23 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
+  const { t, i18n } = useTranslation('auth');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [loginInfo, setLoginInfo] = useState<{ contactName?: string; clientName?: string } | null>(null);
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'zh' ? 'en' : 'zh';
+    i18n.changeLanguage(newLang);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email.trim()) {
-      setError('Please enter your email address.');
+      setError(t('errors.enterEmail'));
       return;
     }
     
@@ -37,11 +44,11 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
           onLoginSuccess(email, result.contactName, result.clientName);
         }, 1500);
       } else {
-        setError(result.error || 'Access denied.');
+        setError(result.error || t('errors.accessDenied'));
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('errors.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -55,16 +62,16 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Access Granted!</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">{t('accessGranted')}</h2>
           <p className="text-slate-500">
-            Welcome{loginInfo?.contactName ? `, ${loginInfo.contactName}` : ''}!
+            {t('welcome')}{loginInfo?.contactName ? `, ${loginInfo.contactName}` : ''}!
             {loginInfo?.clientName && (
               <span className="block text-sm mt-1 text-indigo-600">{loginInfo.clientName}</span>
             )}
           </p>
           <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400">
             <Loader2 className="w-4 h-4 animate-spin" />
-            Loading campaign...
+            {t('loadingCampaign')}
           </div>
         </div>
       </div>
@@ -73,15 +80,25 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+      {/* Language toggle button */}
+      <button
+        onClick={toggleLanguage}
+        className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-white/80 rounded-lg transition-colors"
+        title={i18n.language === 'zh' ? 'Switch to English' : '切换到中文'}
+      >
+        <Globe className="w-4 h-4" />
+        <span>{i18n.language === 'zh' ? 'EN' : '中文'}</span>
+      </button>
+
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-600 text-white font-bold text-2xl mb-4 shadow-lg shadow-indigo-200">
             C
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Client Portal</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
           <p className="text-slate-500 mt-2">
-            Enter your email to access the review dashboard
+            {t('subtitle')}
           </p>
         </div>
 
@@ -89,7 +106,7 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
-              Email Address
+              {t('emailLabel')}
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
@@ -98,7 +115,7 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
                 type="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(null); }}
-                placeholder="you@company.com"
+                placeholder={t('emailPlaceholder')}
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 disabled={isLoading}
                 autoFocus
@@ -123,12 +140,12 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Verifying...
+                {t('verifying')}
               </>
             ) : (
               <>
                 <Lock className="w-5 h-5" />
-                Access Campaign
+                {t('accessCampaign')}
               </>
             )}
           </button>
@@ -137,9 +154,9 @@ const Login: React.FC<LoginProps> = ({ campaignId, onLoginSuccess }) => {
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-slate-100">
           <p className="text-center text-xs text-slate-400">
-            Only authorized contacts can access this campaign.
+            {t('accessDeniedFooter')}
             <br />
-            If you need access, please contact your agency representative.
+            {t('contactAgency')}
           </p>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   MessageSquare, 
   CheckCircle, 
@@ -47,6 +48,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
   onSaveDraft,
   readOnly = false 
 }) => {
+  const { t } = useTranslation(['outline', 'common']);
   // State for comments
   const [comments, setComments] = useState<Comment[]>(existingComments);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -303,9 +305,9 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
         <div className="mb-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Outline Review</h1>
+              <h1 className="text-3xl font-bold text-slate-900">{t('pageTitle')}</h1>
               <p className="text-slate-600 mt-2">
-                Review the structure for <span className="font-semibold text-slate-800">"{projectName}"</span> before production begins.
+                {t('description', { projectName })}
               </p>
             </div>
             
@@ -314,7 +316,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
               <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg">
                 <Users className="w-4 h-4" />
                 <span className="text-sm font-medium">
-                  {otherReviewers.length} other{otherReviewers.length > 1 ? 's' : ''} reviewing
+                  {t('common:othersReviewing', { count: otherReviewers.length })}
                 </span>
               </div>
             )}
@@ -326,14 +328,14 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
               <div className="flex items-center gap-2 text-amber-800">
                 <Edit3 className="w-4 h-4" />
                 <span className="text-sm font-medium">
-                  Edit Mode: Click on any section to edit, delete, or add comments
+                  {t('editModeNotice')}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 {lastSaved && (
                   <span className="text-xs text-amber-600 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    Saved {lastSaved.toLocaleTimeString()}
+                    {t('common:saved', { time: lastSaved.toLocaleTimeString() })}
                   </span>
                 )}
                 <button
@@ -341,7 +343,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                   className="flex items-center gap-1 px-3 py-1.5 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition"
                 >
                   <Save className="w-3 h-3" />
-                  Save Draft
+                  {t('common:saveDraft')}
                 </button>
               </div>
             </div>
@@ -355,7 +357,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
             className="mb-3 flex items-center justify-center gap-2 p-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-500 hover:border-green-400 hover:text-green-600 hover:bg-green-50 transition"
           >
             <Plus className="w-4 h-4" />
-            <span className="text-sm font-medium">Add section at beginning</span>
+            <span className="text-sm font-medium">{t('addSectionBeginning')}</span>
           </button>
         )}
 
@@ -395,13 +397,13 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                   {deleted && (
                     <div className="absolute inset-0 flex items-center justify-center bg-red-50/80 rounded-xl z-10">
                       <div className="text-center">
-                        <p className="text-red-600 font-medium text-sm mb-2">Marked for deletion</p>
+                        <p className="text-red-600 font-medium text-sm mb-2">{t('common:markedForDeletion')}</p>
                         {!readOnly && (
                           <button
                             onClick={(e) => { e.stopPropagation(); handleUndoDelete(section.id); }}
                             className="text-xs text-red-700 underline hover:no-underline"
                           >
-                            Undo
+                            {t('common:undo')}
                           </button>
                         )}
                       </div>
@@ -412,7 +414,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                   {modified && !deleted && (
                     <div className="absolute top-2 right-2 flex items-center gap-2">
                       <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
-                        Modified
+                        {t('common:modified')}
                       </span>
                       {!readOnly && (
                         <button
@@ -442,7 +444,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                           type="text"
                           value={editFormData.title || ''}
                           onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                          placeholder="Section title"
+                          placeholder={t('sectionTitle')}
                           className="flex-1 px-3 py-1 border border-slate-300 rounded text-sm"
                           autoFocus
                         />
@@ -450,7 +452,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                       <textarea
                         value={editFormData.description || ''}
                         onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                        placeholder="Description (optional)"
+                        placeholder={t('descriptionOptional')}
                         className="w-full px-3 py-2 border border-slate-300 rounded text-sm resize-none"
                         rows={2}
                       />
@@ -459,13 +461,13 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                           onClick={handleCancelEdit}
                           className="px-3 py-1 text-sm text-slate-600 hover:text-slate-800"
                         >
-                          Cancel
+                          {t('common:cancel')}
                         </button>
                         <button
                           onClick={handleSaveEdit}
                           className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
                         >
-                          Save Changes
+                          {t('common:saveChanges')}
                         </button>
                       </div>
                     </div>
@@ -507,14 +509,14 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                           <button
                             onClick={(e) => { e.stopPropagation(); handleStartEdit(section); }}
                             className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded"
-                            title="Edit section"
+                            title={t('editSection')}
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleDeleteSection(section.id); }}
                             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded"
-                            title="Delete section"
+                            title={t('deleteSection')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -540,7 +542,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                     className="w-full flex items-center justify-center gap-2 p-1.5 border-2 border-dashed border-transparent hover:border-green-300 rounded-lg text-slate-400 hover:text-green-600 hover:bg-green-50 transition opacity-0 hover:opacity-100 focus:opacity-100"
                   >
                     <Plus className="w-3 h-3" />
-                    <span className="text-xs">Add section</span>
+                    <span className="text-xs">{t('addSection')}</span>
                   </button>
                 )}
               </React.Fragment>
@@ -565,7 +567,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                     type="text"
                     value={newSectionData.title || ''}
                     onChange={(e) => setNewSectionData({ ...newSectionData, title: e.target.value })}
-                    placeholder="New section title"
+                    placeholder={t('newSectionTitle')}
                     className="flex-1 px-3 py-1 border border-slate-300 rounded text-sm"
                     autoFocus
                   />
@@ -573,7 +575,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                 <textarea
                   value={newSectionData.description || ''}
                   onChange={(e) => setNewSectionData({ ...newSectionData, description: e.target.value })}
-                  placeholder="Description (optional)"
+                  placeholder={t('descriptionOptional')}
                   className="w-full px-3 py-2 border border-slate-300 rounded text-sm resize-none"
                   rows={2}
                 />
@@ -582,14 +584,14 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                     onClick={handleCancelAddSection}
                     className="px-3 py-1 text-sm text-slate-600 hover:text-slate-800"
                   >
-                    Cancel
+                    {t('common:cancel')}
                   </button>
                   <button
                     onClick={handleSaveNewSection}
                     disabled={!newSectionData.title?.trim()}
                     className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50"
                   >
-                    Add Section
+                    {t('addSectionButton')}
                   </button>
                 </div>
               </div>
@@ -601,10 +603,10 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
       {/* Right Column: Comments & Actions */}
       <div className="w-full md:w-96 flex flex-col h-full bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex-shrink-0">
         <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-          <h3 className="font-semibold text-slate-900">Comments & Actions</h3>
+          <h3 className="font-semibold text-slate-900">{t('commentsAndActions')}</h3>
           {edits.length > 0 && (
             <p className="text-xs text-amber-600 mt-1">
-              {edits.length} edit suggestion{edits.length > 1 ? 's' : ''} pending
+              {t('common:editSuggestionsPending', { count: edits.length })}
             </p>
           )}
         </div>
@@ -613,10 +615,10 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
           {activeSectionId ? (
             <>
               <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
-                Selected Section
+                {t('selectedSection')}
               </div>
               <div className="bg-white p-3 rounded-lg border border-slate-200 text-sm text-slate-700 italic mb-6">
-                "{data.find(s => s.id === activeSectionId)?.title || 'New Section'}"
+                "{data.find(s => s.id === activeSectionId)?.title || t('newSection')}"
               </div>
 
               {getSectionComments(activeSectionId).map(comment => (
@@ -636,7 +638,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                 <div className="mt-4">
                   <textarea
                     className="w-full p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none bg-white"
-                    placeholder="Ask a question or request a change..."
+                    placeholder={t('commentPlaceholder')}
                     rows={3}
                     value={newCommentText}
                     onChange={(e) => setNewCommentText(e.target.value)}
@@ -652,7 +654,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                     disabled={!newCommentText.trim()}
                     className="mt-2 w-full py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
                   >
-                    Post Comment
+                    {t('common:postComment')}
                   </button>
                 </div>
               )}
@@ -660,7 +662,7 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center text-slate-400 p-6">
               <MessageSquare className="w-12 h-12 mb-3 opacity-20" />
-              <p className="text-sm">Select a section on the left to add comments or view details.</p>
+              <p className="text-sm">{t('commentPlaceholder')}</p>
             </div>
           )}
         </div>
@@ -668,10 +670,10 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
         {/* General Comments Section */}
         {!readOnly && (
           <div className="p-4 bg-slate-50/50 border-t border-slate-200">
-            <h3 className="text-sm font-semibold text-slate-900 mb-2 uppercase tracking-wide">General Comments (Optional)</h3>
+            <h3 className="text-sm font-semibold text-slate-900 mb-2 uppercase tracking-wide">{t('common:generalComments')}</h3>
             <textarea
               className="w-full min-h-[80px] p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y bg-white"
-              placeholder="Any other thoughts on the direction, tone, or style?"
+              placeholder={t('common:generalCommentsPlaceholder')}
               value={generalComments}
               onChange={(e) => setGeneralComments(e.target.value)}
             />
@@ -681,15 +683,15 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
         <div className="p-4 bg-white border-t border-slate-200">
           {readOnly ? (
             <p className="text-sm text-slate-500 text-center py-2">
-              <span className="font-medium">Read-only mode</span> — This review has been completed.
+              <span className="font-medium">{t('common:readOnlyMode')}</span> — {t('common:reviewCompleted')}
             </p>
           ) : (
             <>
               <p className="text-xs text-slate-500 text-center mb-3">
                 {hasUnsavedChanges ? (
-                  <span className="text-amber-600 font-medium">You have unsaved changes</span>
+                  <span className="text-amber-600 font-medium">{t('common:unsavedChanges')}</span>
                 ) : (
-                  'Please review all sections before approving.'
+                  t('reviewAllSections')
                 )}
               </p>
               <div className="grid grid-cols-2 gap-3">
@@ -698,14 +700,14 @@ const OutlineReview: React.FC<OutlineReviewProps> = ({
                   className="flex items-center justify-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
                 >
                   <AlertCircle className="w-4 h-4" />
-                  Request Changes
+                  {t('common:requestChanges')}
                 </button>
                 <button
                   onClick={() => handleSubmit(true)}
                   className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   <CheckCircle className="w-4 h-4" />
-                  Approve Outline
+                  {t('approveOutline')}
                 </button>
               </div>
             </>

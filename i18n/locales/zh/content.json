@@ -1,0 +1,24 @@
+{
+  "pageTitle": "内容审核",
+  "description": "正在审核文章：<bold>\"{{projectName}}\"</bold>。",
+  "viewMode": "查看模式",
+  "editMode": "编辑模式",
+  "editModeNotice": "编辑模式：点击任意内容块进行编辑、删除或添加评论",
+  "addContentBeginning": "在开头添加内容",
+  "addContent": "添加内容",
+  "enterContent": "输入内容...",
+  "commentsAndActions": "评论和操作",
+  "selectedText": "已选文本",
+  "noSelection": "未选择",
+  "noSelectionDesc": "点击左侧任意段落、标题或引用来添加评论或编辑。",
+  "commentPlaceholder": "在此输入您的反馈...",
+  "approveContent": "批准内容",
+  "editBlock": "编辑内容块",
+  "deleteBlock": "删除内容块",
+  "blockTypes": {
+    "paragraph": "段落",
+    "header": "标题",
+    "quote": "引用"
+  },
+  "imagePlaceholder": "[图片占位：{{content}}]"
+}

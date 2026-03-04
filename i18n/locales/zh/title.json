@@ -1,0 +1,26 @@
+{
+  "pageTitle": "标题和关键词审核",
+  "step": "第 1 步，共 3 步",
+  "description": "选择您喜欢的标题。您可以直接编辑或添加备注。您的意见将帮助我们优化内容策略。",
+  "rejectAll": "全部拒绝",
+  "approveSelection": "批准所选 ({{count}})",
+  "selected": "已选 {{count}} 项",
+  "addNotes": "添加关于此标题的具体反馈或备注...",
+  "pressEnterToSave": "按 Enter 保存",
+  "aiRephrase": "AI 改写",
+  "thinking": "思考中...",
+  "projectContext": "项目背景",
+  "targetAudience": "目标受众",
+  "strategyGoal": "策略目标",
+  "targetKeywords": "目标关键词",
+  "reject": {
+    "title": "拒绝所有标题",
+    "description": "请告诉我们这些标题不合适的原因，以便我们提供更好的选项。",
+    "placeholder": "例如：这些标题对我们的企业客户来说太随意了...",
+    "submit": "提交拒绝"
+  },
+  "aiSuggestion": {
+    "confirm": "AI 建议：\"{{title}}\"\n\n是否用此建议替换当前标题？",
+    "error": "暂时无法生成建议。"
+  }
+}

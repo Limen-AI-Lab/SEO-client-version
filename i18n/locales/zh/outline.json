@@ -1,0 +1,19 @@
+{
+  "pageTitle": "大纲审核",
+  "description": "在正式制作前，审核 <bold>\"{{projectName}}\"</bold> 的结构。",
+  "editModeNotice": "编辑模式：点击任意章节进行编辑、删除或添加评论",
+  "addSectionBeginning": "在开头添加章节",
+  "addSection": "添加章节",
+  "newSectionTitle": "新章节标题",
+  "sectionTitle": "章节标题",
+  "descriptionOptional": "描述（可选）",
+  "addSectionButton": "添加章节",
+  "commentsAndActions": "评论和操作",
+  "selectedSection": "已选章节",
+  "newSection": "新章节",
+  "commentPlaceholder": "提出问题或请求更改...",
+  "reviewAllSections": "请在批准前审核所有章节。",
+  "approveOutline": "批准大纲",
+  "editSection": "编辑章节",
+  "deleteSection": "删除章节"
+}

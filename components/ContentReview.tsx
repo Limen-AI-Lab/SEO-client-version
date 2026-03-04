@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   MessageSquare, 
   CheckCircle, 
@@ -47,6 +48,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
   onSaveDraft,
   readOnly = false 
 }) => {
+  const { t } = useTranslation(['content', 'common']);
   // State for comments
   const [comments, setComments] = useState<Comment[]>(existingComments);
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
@@ -267,15 +269,15 @@ const ContentReview: React.FC<ContentReviewProps> = ({
               onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value as ContentBlock['type'] })}
               className="px-2 py-1 border border-slate-300 rounded text-sm font-sans"
             >
-              <option value="paragraph">Paragraph</option>
-              <option value="header">Header</option>
-              <option value="quote">Quote</option>
+              <option value="paragraph">{t('blockTypes.paragraph')}</option>
+              <option value="header">{t('blockTypes.header')}</option>
+              <option value="quote">{t('blockTypes.quote')}</option>
             </select>
           </div>
           <textarea
             value={editFormData.content || ''}
             onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
-            placeholder="Enter content..."
+            placeholder={t('enterContent')}
             className="w-full px-3 py-2 border border-slate-300 rounded text-sm resize-none font-sans"
             rows={4}
             autoFocus
@@ -285,13 +287,13 @@ const ContentReview: React.FC<ContentReviewProps> = ({
               onClick={handleCancelEdit}
               className="px-3 py-1 text-sm text-slate-600 hover:text-slate-800 font-sans"
             >
-              Cancel
+              {t('common:cancel')}
             </button>
             <button
               onClick={handleSaveEdit}
               className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 font-sans"
             >
-              Save Changes
+              {t('common:saveChanges')}
             </button>
           </div>
         </div>
@@ -312,7 +314,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
       case 'image':
         return (
           <div className="my-4 bg-slate-100 h-48 flex items-center justify-center rounded-lg text-slate-400 text-sm border border-slate-200 border-dashed">
-            [Image Placeholder: {block.content}]
+            {t('imagePlaceholder', { content: block.content })}
           </div>
         );
       default:
@@ -329,9 +331,9 @@ const ContentReview: React.FC<ContentReviewProps> = ({
         <div className="mb-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Content Review</h1>
+              <h1 className="text-3xl font-bold text-slate-900">{t('pageTitle')}</h1>
               <p className="text-slate-600 mt-2">
-                Reviewing article: <span className="font-semibold text-slate-800">"{projectName}"</span>.
+                {t('description', { projectName })}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -340,12 +342,12 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                 <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg">
                   <Users className="w-4 h-4" />
                   <span className="text-sm font-medium">
-                    {otherReviewers.length} other{otherReviewers.length > 1 ? 's' : ''} reviewing
+                    {t('common:othersReviewing', { count: otherReviewers.length })}
                   </span>
                 </div>
               )}
               <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-semibold uppercase tracking-wide">
-                {readOnly ? 'View Mode' : 'Edit Mode'}
+                {readOnly ? t('viewMode') : t('editMode')}
               </span>
             </div>
           </div>
@@ -356,14 +358,14 @@ const ContentReview: React.FC<ContentReviewProps> = ({
               <div className="flex items-center gap-2 text-amber-800">
                 <Edit3 className="w-4 h-4" />
                 <span className="text-sm font-medium">
-                  Edit Mode: Click on any block to edit, delete, or add comments
+                  {t('editModeNotice')}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 {lastSaved && (
                   <span className="text-xs text-amber-600 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    Saved {lastSaved.toLocaleTimeString()}
+                    {t('common:saved', { time: lastSaved.toLocaleTimeString() })}
                   </span>
                 )}
                 <button
@@ -371,7 +373,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                   className="flex items-center gap-1 px-3 py-1.5 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 transition"
                 >
                   <Save className="w-3 h-3" />
-                  Save Draft
+                  {t('common:saveDraft')}
                 </button>
               </div>
             </div>
@@ -389,7 +391,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                 className="w-full mb-4 flex items-center justify-center gap-2 p-2 border-2 border-dashed border-slate-300 rounded-lg text-slate-500 hover:border-green-400 hover:text-green-600 hover:bg-green-50 transition"
               >
                 <Plus className="w-4 h-4" />
-                <span className="text-sm font-medium font-sans">Add content at beginning</span>
+                <span className="text-sm font-medium font-sans">{t('addContentBeginning')}</span>
               </button>
             )}
             
@@ -428,13 +430,13 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                       {deleted && (
                         <div className="absolute inset-0 flex items-center justify-center bg-red-50/80 rounded-lg z-10">
                           <div className="text-center">
-                            <p className="text-red-600 font-medium text-sm mb-2 font-sans">Marked for deletion</p>
+                            <p className="text-red-600 font-medium text-sm mb-2 font-sans">{t('common:markedForDeletion')}</p>
                             {!readOnly && (
                               <button
                                 onClick={(e) => { e.stopPropagation(); handleUndoDelete(block.id); }}
                                 className="text-xs text-red-700 underline hover:no-underline font-sans"
                               >
-                                Undo
+                                {t('common:undo')}
                               </button>
                             )}
                           </div>
@@ -445,7 +447,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                       {modified && !deleted && (
                         <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
                           <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded font-sans">
-                            Modified
+                            {t('common:modified')}
                           </span>
                           {!readOnly && (
                             <button
@@ -483,14 +485,14 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                           <button
                             onClick={(e) => { e.stopPropagation(); handleStartEdit(block); }}
                             className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded"
-                            title="Edit block"
+                            title={t('editBlock')}
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleDeleteBlock(block.id); }}
                             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded"
-                            title="Delete block"
+                            title={t('deleteBlock')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -508,7 +510,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                         className="w-full flex items-center justify-center gap-2 p-1.5 border-2 border-dashed border-transparent hover:border-green-300 rounded-lg text-slate-400 hover:text-green-600 hover:bg-green-50 transition opacity-0 hover:opacity-100 focus:opacity-100"
                       >
                         <Plus className="w-3 h-3" />
-                        <span className="text-xs font-sans">Add content</span>
+                        <span className="text-xs font-sans">{t('addContent')}</span>
                       </button>
                     )}
                   </React.Fragment>
@@ -525,15 +527,15 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                         onChange={(e) => setNewBlockData({ ...newBlockData, type: e.target.value as ContentBlock['type'] })}
                         className="px-2 py-1 border border-slate-300 rounded text-sm font-sans"
                       >
-                        <option value="paragraph">Paragraph</option>
-                        <option value="header">Header</option>
-                        <option value="quote">Quote</option>
+                        <option value="paragraph">{t('blockTypes.paragraph')}</option>
+                        <option value="header">{t('blockTypes.header')}</option>
+                        <option value="quote">{t('blockTypes.quote')}</option>
                       </select>
                     </div>
                     <textarea
                       value={newBlockData.content || ''}
                       onChange={(e) => setNewBlockData({ ...newBlockData, content: e.target.value })}
-                      placeholder="Enter content..."
+                      placeholder={t('enterContent')}
                       className="w-full px-3 py-2 border border-slate-300 rounded text-sm resize-none font-sans"
                       rows={4}
                       autoFocus
@@ -543,14 +545,14 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                         onClick={handleCancelAddBlock}
                         className="px-3 py-1 text-sm text-slate-600 hover:text-slate-800 font-sans"
                       >
-                        Cancel
+                        {t('common:cancel')}
                       </button>
                       <button
                         onClick={handleSaveNewBlock}
                         disabled={!newBlockData.content?.trim()}
                         className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50 font-sans"
                       >
-                        Add Content
+                        {t('addContent')}
                       </button>
                     </div>
                   </div>
@@ -567,14 +569,14 @@ const ContentReview: React.FC<ContentReviewProps> = ({
       <div className="w-full md:w-96 flex flex-col h-full bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex-shrink-0">
         <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
           <div>
-            <h3 className="font-semibold text-slate-900">Comments & Actions</h3>
+            <h3 className="font-semibold text-slate-900">{t('commentsAndActions')}</h3>
             {edits.length > 0 && (
               <p className="text-xs text-amber-600 mt-1">
-                {edits.length} edit suggestion{edits.length > 1 ? 's' : ''} pending
+                {t('common:editSuggestionsPending', { count: edits.length })}
               </p>
             )}
           </div>
-          <span className="text-xs text-slate-400 font-medium">{comments.length} comments</span>
+          <span className="text-xs text-slate-400 font-medium">{comments.length} {t('common:comments')}</span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">
@@ -582,7 +584,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
             <>
               {/* Context Header */}
               <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
-                Selected Text
+                {t('selectedText')}
               </div>
               <div className="bg-white p-3 rounded-lg border border-slate-200 text-xs text-slate-600 italic mb-6 shadow-sm border-l-4 border-l-indigo-500">
                 "{data.find(b => b.id === activeBlockId)?.content.substring(0, 100)}..."
@@ -609,7 +611,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                   <textarea
                     autoFocus
                     className="w-full p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none bg-white transition-shadow"
-                    placeholder="Type your feedback here..."
+                    placeholder={t('commentPlaceholder')}
                     rows={3}
                     value={newCommentText}
                     onChange={(e) => setNewCommentText(e.target.value)}
@@ -626,7 +628,7 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                       disabled={!newCommentText.trim()}
                       className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm"
                     >
-                      Post Comment
+                      {t('common:postComment')}
                     </button>
                   </div>
                 </div>
@@ -638,9 +640,9 @@ const ContentReview: React.FC<ContentReviewProps> = ({
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                 <MessageSquare className="w-8 h-8 text-slate-300" />
               </div>
-              <h4 className="text-slate-900 font-medium mb-1">No Selection</h4>
+              <h4 className="text-slate-900 font-medium mb-1">{t('noSelection')}</h4>
               <p className="text-sm text-slate-500 max-w-[200px]">
-                Click on any paragraph, header, or quote on the left to add comments or edit.
+                {t('noSelectionDesc')}
               </p>
             </div>
           )}
@@ -649,10 +651,10 @@ const ContentReview: React.FC<ContentReviewProps> = ({
         {/* General Comments Section */}
         {!readOnly && (
           <div className="p-4 bg-slate-50/50 border-t border-slate-200">
-            <h3 className="text-sm font-semibold text-slate-900 mb-2 uppercase tracking-wide">General Comments (Optional)</h3>
+            <h3 className="text-sm font-semibold text-slate-900 mb-2 uppercase tracking-wide">{t('common:generalComments')}</h3>
             <textarea
               className="w-full min-h-[80px] p-3 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y bg-white"
-              placeholder="Any other thoughts on the direction, tone, or style?"
+              placeholder={t('common:generalCommentsPlaceholder')}
               value={generalComments}
               onChange={(e) => setGeneralComments(e.target.value)}
             />
@@ -663,17 +665,17 @@ const ContentReview: React.FC<ContentReviewProps> = ({
         <div className="p-4 bg-white border-t border-slate-200">
           {readOnly ? (
             <p className="text-sm text-slate-500 text-center py-2">
-              <span className="font-medium">Read-only mode</span> — This review has been completed.
+              <span className="font-medium">{t('common:readOnlyMode')}</span> — {t('common:reviewCompleted')}
             </p>
           ) : (
             <>
               <p className="text-xs text-slate-400 text-center mb-3">
                 {hasUnsavedChanges ? (
-                  <span className="text-amber-600 font-medium">You have unsaved changes</span>
+                  <span className="text-amber-600 font-medium">{t('common:unsavedChanges')}</span>
                 ) : comments.length === 0 && edits.length === 0 ? (
-                  'No changes made yet.'
+                  t('common:noChangesYet')
                 ) : (
-                  `${comments.length} comments, ${edits.length} edits recorded.`
+                  t('common:changesRecorded', { comments: comments.length, edits: edits.length })
                 )}
               </p>
               <div className="grid grid-cols-2 gap-3">
@@ -682,14 +684,14 @@ const ContentReview: React.FC<ContentReviewProps> = ({
                   className="flex items-center justify-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm"
                 >
                   <AlertCircle className="w-4 h-4" />
-                  Request Changes
+                  {t('common:requestChanges')}
                 </button>
                 <button
                   onClick={() => handleSubmit(true)}
                   className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors text-sm shadow-md shadow-indigo-200"
                 >
                   <CheckCircle className="w-4 h-4" />
-                  Approve Content
+                  {t('approveContent')}
                 </button>
               </div>
             </>

@@ -1,0 +1,26 @@
+{
+  "pageTitle": "Title & Keyword Review",
+  "step": "Step 1 of 3",
+  "description": "Select your preferred title(s). You can edit them directly or add notes. Your input helps us refine the content strategy.",
+  "rejectAll": "Reject All",
+  "approveSelection": "Approve Selection ({{count}})",
+  "selected": "{{count}} selected",
+  "addNotes": "Add specific feedback or notes about this title...",
+  "pressEnterToSave": "Press Enter to save",
+  "aiRephrase": "AI Rephrase",
+  "thinking": "Thinking...",
+  "projectContext": "Project Context",
+  "targetAudience": "Target Audience",
+  "strategyGoal": "Strategy Goal",
+  "targetKeywords": "Target Keywords",
+  "reject": {
+    "title": "Reject All Titles",
+    "description": "Please let us know why these titles don't work so we can provide better options.",
+    "placeholder": "e.g., These feel too casual for our corporate clients...",
+    "submit": "Submit Rejection"
+  },
+  "aiSuggestion": {
+    "confirm": "AI Suggestion: \"{{title}}\"\n\nReplace current title with this suggestion?",
+    "error": "Could not generate suggestions at this time."
+  }
+}

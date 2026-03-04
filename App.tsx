@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Layout from './components/Layout';
 import TitleReview from './components/TitleReview';
 import OutlineReview from './components/OutlineReview';
@@ -14,7 +15,7 @@ import {
   ContentEditSuggestion,
   ActiveReviewer
 } from './types';
-import { Loader2, ArrowRight, CheckCircle2, ArrowLeft, AlertCircle, LogOut } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2, ArrowLeft, AlertCircle, LogOut, Globe } from 'lucide-react';
 import { 
   getArticlesAwaitingReview, 
   getArticleById,
@@ -43,6 +44,8 @@ type ViewType = 'LOADING' | 'LOGIN' | 'CAMPAIGN_DASHBOARD' | 'ARTICLE_REVIEW' | 
 // --- APP COMPONENT ---
 
 const App: React.FC = () => {
+  const { t, i18n } = useTranslation(['common', 'dashboard']);
+
   // URL parameters
   const [campaignId, setCampaignId] = useState<string | null>(null);
   const [articleId, setArticleId] = useState<string | null>(null);
@@ -544,12 +547,18 @@ const App: React.FC = () => {
   // RENDER LOGIC
   // ============================================
 
+  // Language toggle function for pages without Layout
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'zh' ? 'en' : 'zh';
+    i18n.changeLanguage(newLang);
+  };
+
   // Loading state
   if (view === 'LOADING' || loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
         <Loader2 className="w-10 h-10 text-indigo-600 animate-spin mb-4" />
-        <p className="text-slate-500 font-medium animate-pulse">Loading...</p>
+        <p className="text-slate-500 font-medium animate-pulse">{t('common:loading')}</p>
       </div>
     );
   }
@@ -562,13 +571,13 @@ const App: React.FC = () => {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Error</h2>
-          <p className="text-slate-500 mb-6">{error || 'Something went wrong.'}</p>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">{t('common:error')}</h2>
+          <p className="text-slate-500 mb-6">{error || t('common:somethingWentWrong')}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
           >
-            Try Again
+            {t('common:tryAgain')}
           </button>
         </div>
       </div>
@@ -592,15 +601,15 @@ const App: React.FC = () => {
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
           <CheckCircle2 className="w-10 h-10 text-green-600" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Feedback Received!</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('dashboard:feedbackReceived')}</h1>
         <p className="text-slate-600 max-w-md mb-8">
-          Your feedback has been securely synchronized with the Agency team. We will notify you when the next stage is ready.
+          {t('dashboard:feedbackSynced')}
         </p>
         <button 
           onClick={handleBackToCampaign}
           className="px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors"
         >
-          {campaignId ? 'Back to Campaign' : 'Return to Dashboard'}
+          {campaignId ? t('dashboard:backToCampaign') : t('dashboard:returnToDashboard')}
         </button>
       </div>
     );
@@ -627,13 +636,23 @@ const App: React.FC = () => {
                   )}
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-red-600 transition"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                  title={i18n.language === 'zh' ? 'Switch to English' : '切换到中文'}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>{i18n.language === 'zh' ? 'EN' : '中文'}</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-red-600 transition"
+                >
+                  <LogOut size={16} />
+                  {t('common:logout')}
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -658,7 +677,7 @@ const App: React.FC = () => {
               className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition font-medium"
             >
               <ArrowLeft size={18} />
-              Back to Campaign
+              {t('dashboard:backToCampaign')}
             </button>
           )}
           
@@ -669,7 +688,7 @@ const App: React.FC = () => {
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-600 transition"
-                title="Logout"
+                title={t('common:logout')}
               >
                 <LogOut size={16} />
               </button>
@@ -739,20 +758,20 @@ const App: React.FC = () => {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 text-white font-bold text-xl mb-4 shadow-lg shadow-indigo-200">
             T
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Welcome, Client</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t('dashboard:welcomeClient')}</h1>
           <p className="text-slate-500 mt-2">
-            You have <span className="font-bold text-indigo-600">{tasks.length} pending {tasks.length === 1 ? 'item' : 'items'}</span> for review.
+            {t('dashboard:pendingItems', { count: tasks.length })}
           </p>
         </div>
 
         {tasks.length === 0 ? (
           <div className="bg-white p-8 rounded-xl border border-slate-200 text-center">
-            <p className="text-slate-600">No articles awaiting review at this time.</p>
+            <p className="text-slate-600">{t('dashboard:noArticlesAwaiting')}</p>
             <button 
               onClick={loadArticles}
               className="mt-4 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
             >
-              Refresh
+              {t('common:refresh')}
             </button>
           </div>
         ) : (
@@ -772,10 +791,10 @@ const App: React.FC = () => {
                       : 'bg-emerald-50 text-emerald-700'
                   }`}>
                     {task.type === TaskType.TITLE_REVIEW 
-                      ? 'TITLE REVIEW' 
+                      ? t('dashboard:titleReview').toUpperCase()
                       : task.type === TaskType.OUTLINE_REVIEW
-                      ? 'OUTLINE REVIEW'
-                      : 'CONTENT REVIEW'}
+                      ? t('dashboard:outlineReview').toUpperCase()
+                      : t('dashboard:contentReview').toUpperCase()}
                   </span>
                   <span className="text-xs text-slate-400 font-medium">{task.dueDate}</span>
                 </div>
@@ -783,7 +802,7 @@ const App: React.FC = () => {
                   {task.projectName}
                 </h3>
                 <div className="mt-4 flex items-center text-sm text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0 duration-200">
-                  Start Review <ArrowRight className="w-4 h-4 ml-1" />
+                  {t('dashboard:startReview')} <ArrowRight className="w-4 h-4 ml-1" />
                 </div>
               </div>
             ))}
@@ -791,7 +810,7 @@ const App: React.FC = () => {
         )}
         
         <p className="text-center text-xs text-slate-400 mt-12">
-          Secure review portal • Real-time sync
+          {t('dashboard:securePortal')}
         </p>
       </div>
     </div>

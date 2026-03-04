@@ -1,0 +1,24 @@
+{
+  "pageTitle": "Content Review",
+  "description": "Reviewing article: <bold>\"{{projectName}}\"</bold>.",
+  "viewMode": "View Mode",
+  "editMode": "Edit Mode",
+  "editModeNotice": "Edit Mode: Click on any block to edit, delete, or add comments",
+  "addContentBeginning": "Add content at beginning",
+  "addContent": "Add content",
+  "enterContent": "Enter content...",
+  "commentsAndActions": "Comments & Actions",
+  "selectedText": "Selected Text",
+  "noSelection": "No Selection",
+  "noSelectionDesc": "Click on any paragraph, header, or quote on the left to add comments or edit.",
+  "commentPlaceholder": "Type your feedback here...",
+  "approveContent": "Approve Content",
+  "editBlock": "Edit block",
+  "deleteBlock": "Delete block",
+  "blockTypes": {
+    "paragraph": "Paragraph",
+    "header": "Header",
+    "quote": "Quote"
+  },
+  "imagePlaceholder": "[Image Placeholder: {{content}}]"
+}
